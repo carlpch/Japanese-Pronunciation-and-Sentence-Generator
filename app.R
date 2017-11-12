@@ -85,10 +85,11 @@ server <- function(input, output){
   # the ", sanitize.text.function = function(x) x)" above, powerfully renders htmls within tibble, yay.
   
   word_list <- c()
-  
+  parsed <- tibble()
+    
   observeEvent(input$submitArticle, {
     # Goo API again for 形態素解析
-    parsed <- tibble(
+    parsed <<- tibble(
       form = POST(url = "https://labs.goo.ne.jp/api/morph", 
                     body = list("app_id"=goo_id, "sentence"=input$article, 
                                 "info_filter"="form"), encode = "json") %>% content() %>% unlist(),
@@ -111,31 +112,36 @@ server <- function(input, output){
     )
     )
     )
-    })
-  
-  word_table <- tibble()
-
-  lapply(1:nrow(parsed), function(j){
-    observeEvent(input[[paste0("word-", j)]], {
-      print("yes")
-      if (!(parsed[j,]$form %in% word_table$word)){
-        print("yes2")
-        # 1/3 Example Sentence (contents extracted from Yourei.com)
-        
-        item <- tibble(
-          "word" = parsed[j,]$form, 
-          "hiragana" = hiragana_api(parsed[j,]$form),
-          "sentence" = yourei(parsed[j,]$form),
-          "mp3" = mp3_get(parsed[j,]$form)
-        )
-        word_table <<- rbind(word_table,item)
-        output$table2 <- renderTable(word_table, sanitize.text.function = function(x) x)
-      } else {
-        print("already")
-      }
+    ###
+    
+    word_table <- tibble()
+    
+    lapply(1:nrow(parsed), function(j){
+      observeEvent(input[[paste0("word-", j)]], {
+        print("yes")
+        if (!(parsed[j,]$form %in% word_table$word)){
+          print("yes2")
+          # 1/3 Example Sentence (contents extracted from Yourei.com)
+          
+          item <- tibble(
+            "word" = parsed[j,]$form, 
+            "hiragana" = hiragana_api(parsed[j,]$form),
+            "sentence" = yourei(parsed[j,]$form),
+            "mp3" = mp3_get(parsed[j,]$form)
+          )
+          word_table <<- rbind(word_table,item)
+          output$table2 <- renderTable(word_table, sanitize.text.function = function(x) x)
+        } else {
+          print("already")
+        }
+      })
+      
     })
     
-  })
+    ###
+    })
+  
+  
   
   
 }
