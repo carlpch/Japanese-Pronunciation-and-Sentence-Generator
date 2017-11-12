@@ -1,0 +1,12 @@
+name: IUC-Test
+title: IUC-Test
+username:
+account: carlpch
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 234543
+bundleId: 1070910
+url: https://carlpch.shinyapps.io/IUC-Test/
+when: 1510466892.28489
+asMultiple: FALSE
+asStatic: FALSE

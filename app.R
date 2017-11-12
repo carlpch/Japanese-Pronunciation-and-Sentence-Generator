@@ -1,7 +1,6 @@
 # Application
 
 require(shiny)
-require(RMeCab)
 require(tidyverse)
 library(rvest)
 library(tm)
