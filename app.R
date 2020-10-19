@@ -16,21 +16,26 @@ ui <- fluidPage(
              }')
     )
   ),
-  titlePanel("Japanese Pronunciation and Sentence Generator (言語例文、音声生成)"),
+  titlePanel("Japanese Pronunciation and Sentence Generator"),
+  tags$h3('言語例文、音声生成'),
   "Developer: Carl Huang（",
   tags$a(href="mailto: carlls007@gmail.com", "carlls007@gmail.com"),
-  "）", "GitHub:", 
+  "）",
+  tags$br(),
+  "GitHub:", 
   tags$a(href="https://github.com/carlpch/Japanese-Pronunciation-and-Sentence-Generator",
   "https://github.com/carlpch/Japanese-Pronunciation-and-Sentence-Generator"),
   tags$br(), 
   tags$br(),
   div(
   tabsetPanel(
-    tabPanel("単語", tags$br(),
-           textInput(inputId = "text", label = "Please try and enter a Japanese word. 日本語の言葉をご入力ください。", value = "紆余曲折"),
+    tabPanel("単語 (Word Pronunciation)", tags$br(),
+          tags$p('Please enter a Japanese word or phrase in the box below.'),
+           textInput(inputId = "text", label = "日本語の言葉をご入力ください。", value = "紆余曲折"),
            actionButton(inputId = "submitWord", label = "検索"), tags$br(), 
+          tags$p('Note to users: this function might not work as Forvo API is currently down. (Last updated: Oct 19, 2020)'),
            tableOutput(outputId = "table")),
-    tabPanel("文の分析", 
+    tabPanel("文の分析 (Paragraph Parsing)", 
              tags$br(), "日本語の文、あるいは文章をペーストしてください",
              textAreaInput(inputId = "article", label = "", 
                       rows = 5, width="600px",
@@ -38,9 +43,8 @@ ui <- fluidPage(
              actionButton(inputId = "submitArticle", label = "分析"), 
              tags$div(id = 'placeholder'), 
              tableOutput(outputId = "table2")
-             ),
-    tabPanel("CSVのアプロード", 
-             "準備中です。")
+             )
+    # tabPanel("CSVのアプロード", "準備中です。")
     ))
   )
 
@@ -131,8 +135,8 @@ server <- function(input, output){
           item <- tibble(
             "word" = parsed[j,]$form, 
             "hiragana" = hiragana_api(parsed[j,]$form),
-            "sentence" = yourei(parsed[j,]$form),
-            "mp3" = mp3_get(parsed[j,]$form)
+            "sentence" = yourei(parsed[j,]$form)
+            #"mp3" = mp3_get(parsed[j,]$form)
           )
           word_table <<- rbind(word_table,item)
           output$table2 <- renderTable(word_table, sanitize.text.function = function(x) x)
