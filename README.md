@@ -1,4 +1,5 @@
 <img width="80%" src='iuc-test.png'/>
+This app is currently online at carlpch.shinyapps.io/iuc-test/
 
 # App Description 
 Simple web app for Japanese language learners (still at testing stage)
