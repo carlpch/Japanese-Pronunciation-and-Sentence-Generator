@@ -7,6 +7,7 @@ library(tm)
 library(stringr)
 library(httr)
 
+
 ui <- fluidPage(
   tags$head(
     tags$style(
@@ -15,14 +16,18 @@ ui <- fluidPage(
              }')
     )
   ),
-  titlePanel("言語例文、音声生成トスト"),
-  "ファン・ビーチェン（",
-  tags$a(href="mailto: ph9xn@virginia.edu", "ph9xn@virginia.edu"),
-  "）", tags$br(),tags$br(), 
+  titlePanel("Japanese Pronunciation and Sentence Generator (言語例文、音声生成)"),
+  "Developer: Carl Huang（",
+  tags$a(href="mailto: carlls007@gmail.com", "carlls007@gmail.com"),
+  "）", "GitHub:", 
+  tags$a(href="https://github.com/carlpch/Japanese-Pronunciation-and-Sentence-Generator",
+  "https://github.com/carlpch/Japanese-Pronunciation-and-Sentence-Generator"),
+  tags$br(), 
+  tags$br(),
   div(
   tabsetPanel(
     tabPanel("単語", tags$br(),
-           textInput(inputId = "text", label = "日本語の言葉をご入力ください。", value = "紆余曲折"),
+           textInput(inputId = "text", label = "Please try and enter a Japanese word. 日本語の言葉をご入力ください。", value = "紆余曲折"),
            actionButton(inputId = "submitWord", label = "検索"), tags$br(), 
            tableOutput(outputId = "table")),
     tabPanel("文の分析", 
@@ -43,7 +48,7 @@ ui <- fluidPage(
 
 server <- function(input, output){
   
-  goo_id <- "adf6e23c9cc3208fc01c85f45362c1eb6fdb068b6d3e883e87f18d57eefae1c9"
+  goo_id <- Sys.getenv('GOO_ID')
   # for TabPanel 1 (Word)
 
   # 1/3 Example Sentence (contents extracted from Yourei.com)
@@ -63,7 +68,7 @@ server <- function(input, output){
   
   # 3/3 Audio file (purchased from Forvo)
   mp3_get <- function(x){
-    base_url <- "https://apifree.forvo.com/key/7bc97d43becc4bfd4280c37f90070d05/format/xml/action/standard-pronunciation/word/"
+    base_url <- paste("https://apifree.forvo.com/key/",Sys.getenv('FORVO_API_KEY'),"/format/xml/action/standard-pronunciation/word/", sep="")
     forvo_url = paste(base_url, x, "/language/ja", sep = "")
     xml <- forvo_url %>% read_xml() %>% as_list()
     mp3url <-  xml$item$pathmp3 %>% unlist() %>% toString()
