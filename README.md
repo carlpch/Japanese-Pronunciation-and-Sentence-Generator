@@ -1,5 +1,5 @@
 <img width="80%" src='iuc-test.png'/>
-This app is currently online at https://carlpch.shinyapps.io/iuc-test/
+This app is currently online at https://carlpch.shinyapps.io/Japanese-Pronunciation-and-Sentence-Generator/
 
 # App Description 
 Simple web app for Japanese language learners (still at testing stage)
