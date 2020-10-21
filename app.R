@@ -32,8 +32,8 @@ ui <- fluidPage(
     tabPanel("単語 (Word Pronunciation)", tags$br(),
           tags$p('Please enter a Japanese word or phrase in the box below.'),
            textInput(inputId = "text", label = "日本語の言葉をご入力ください。", value = "紆余曲折"),
-           actionButton(inputId = "submitWord", label = "検索"), tags$br(), 
-          tags$p('Note to users: this function might not work as Forvo API is currently down. (Last updated: Oct 19, 2020)'),
+           actionButton(inputId = "submitWord", label = "検索 Search"), tags$br(), 
+          # tags$p('Note to users: this function might not work as Forvo API is currently down. (Last updated: Oct 19, 2020)'),
            tableOutput(outputId = "table")),
     tabPanel("文の分析 (Paragraph Parsing)", 
              tags$br(), "日本語の文、あるいは文章をペーストしてください",
@@ -75,7 +75,7 @@ server <- function(input, output){
     base_url <- paste("https://apifree.forvo.com/key/",Sys.getenv('FORVO_API_KEY'),"/format/xml/action/standard-pronunciation/word/", sep="")
     forvo_url = paste(base_url, x, "/language/ja", sep = "")
     xml <- forvo_url %>% read_xml() %>% as_list()
-    mp3url <-  xml$item$pathmp3 %>% unlist() %>% toString()
+    mp3url <-  xml$item$item$pathmp3 %>% unlist() %>% toString()
     themp3 <- paste("<audio controls>
                   <source src= ", mp3url, ", type='audio/mp3'>
                   </audio>", sep = "")
@@ -83,10 +83,10 @@ server <- function(input, output){
   
   data <- eventReactive(input$submitWord, {
     tibble(
-      "入力" = input$text,
-      "平仮名" =  hiragana_api(input$text),
-      "例文" = yourei(input$text),
-      "音声" = mp3_get(input$text)
+      "入力 Input" = input$text,
+      "平仮名 Hiragana" =  hiragana_api(input$text),
+      "例文 Example" = yourei(input$text),
+      "音声 Pronunciation" = mp3_get(input$text)
       )
   })
 
@@ -135,8 +135,8 @@ server <- function(input, output){
           item <- tibble(
             "word" = parsed[j,]$form, 
             "hiragana" = hiragana_api(parsed[j,]$form),
-            "sentence" = yourei(parsed[j,]$form)
-            #"mp3" = mp3_get(parsed[j,]$form)
+            "sentence" = yourei(parsed[j,]$form),
+            "mp3" = mp3_get(parsed[j,]$form)
           )
           word_table <<- rbind(word_table,item)
           output$table2 <- renderTable(word_table, sanitize.text.function = function(x) x)
