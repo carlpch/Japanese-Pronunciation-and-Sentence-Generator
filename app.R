@@ -19,7 +19,7 @@ ui <- fluidPage(
   titlePanel("Japanese Pronunciation and Sentence Generator"),
   tags$h3('言語例文、音声生成'),
   "Developer: Carl Huang（",
-  tags$a(href="mailto: carlls007@gmail.com", "carlls007@gmail.com"),
+  tags$a(href="http://carlhuang.com", "carlhuang.com"),
   "）",
   tags$br(),
   "GitHub:", 
@@ -36,11 +36,12 @@ ui <- fluidPage(
           # tags$p('Note to users: this function might not work as Forvo API is currently down. (Last updated: Oct 19, 2020)'),
            tableOutput(outputId = "table")),
     tabPanel("文の分析 (Paragraph Parsing)", 
-             tags$br(), "日本語の文、あるいは文章をペーストしてください",
+             tags$br(), "日本語の文、あるいは文章をペーストしてください。",
+             tags$br(), "Try pasting a paragraph or article in Japanese below!",
              textAreaInput(inputId = "article", label = "", 
                       rows = 5, width="600px",
                        value = "　新国立競技場が２０２０年東京五輪・パラリンピックの後、８万人規模の球技専用競技場に生まれ変わる見通しになった。収益を確保するためだが、年２４億円と見込まれる管理維持費をまかなえるのか、不透明な部分が多い。"),
-             actionButton(inputId = "submitArticle", label = "分析"), 
+             actionButton(inputId = "submitArticle", label = "分析 Start Parsing"), 
              tags$div(id = 'placeholder'), 
              tableOutput(outputId = "table2")
              )
